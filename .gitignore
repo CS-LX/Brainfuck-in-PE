@@ -1,0 +1,22 @@
+# IDE / tooling
+.kagent/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Build artifacts (future)
+build/
+out/
+cmake-build-*/
+*.dll
+*.lib
+*.exp
+*.obj
+*.pdb
+*.ilk
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
