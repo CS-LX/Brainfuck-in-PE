@@ -76,6 +76,7 @@ dotnet run -c Release
 
 | 文档 | 说明 |
 |------|------|
+| [docs/实验报告.md](docs/实验报告.md) | **实验结论、验收记录、复现步骤** |
 | [docs/可行性报告.md](docs/可行性报告.md) | 可行性结论、实验目标、排除方案 |
 | [docs/实现方案.md](docs/实现方案.md) | PE 布局、模块设计、工具链、验收标准 |
 | [docs/archive/](docs/archive/) | 已 supersede 的早期笔记 |
