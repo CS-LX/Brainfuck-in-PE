@@ -9,6 +9,8 @@
 build/
 out/
 cmake-build-*/
+**/bin/
+**/obj/
 *.dll
 *.lib
 *.exp
