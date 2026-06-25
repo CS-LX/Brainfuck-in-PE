@@ -1,6 +1,8 @@
 function(add_bfdll TARGET)
     set(BF_PROGRAMS_DIR "${CMAKE_SOURCE_DIR}/src/programs")
     set(BF_GEN_ASM "${CMAKE_BINARY_DIR}/gen/bf_programs.asm")
+    set(BF_GEN_HEADER "${CMAKE_BINARY_DIR}/gen/bf_exports.gen.h")
+    set(BF_GEN_SOURCE "${CMAKE_BINARY_DIR}/gen/bf_exports.gen.c")
 
     file(GLOB BF_SOURCES CONFIGURE_DEPENDS "${BF_PROGRAMS_DIR}/*.bf")
     if(NOT BF_SOURCES)
@@ -8,12 +10,14 @@ function(add_bfdll TARGET)
     endif()
 
     add_custom_command(
-        OUTPUT "${BF_GEN_ASM}"
+        OUTPUT "${BF_GEN_ASM}" "${BF_GEN_HEADER}" "${BF_GEN_SOURCE}"
         COMMAND ${Python3_EXECUTABLE} "${CMAKE_SOURCE_DIR}/tools/bf2asm.py"
                 ${BF_SOURCES}
                 -o "${BF_GEN_ASM}"
+                --header "${BF_GEN_HEADER}"
+                --source "${BF_GEN_SOURCE}"
         DEPENDS ${BF_SOURCES} "${CMAKE_SOURCE_DIR}/tools/bf2asm.py"
-        COMMENT "Generating MASM from Brainfuck programs"
+        COMMENT "Generating MASM and C exports from Brainfuck programs"
         VERBATIM
     )
 
@@ -31,13 +35,17 @@ function(add_bfdll TARGET)
         src/runtime/bf_io.c
         src/runtime/bf_stub.c
         src/runtime/dllmain.c
+        "${BF_GEN_SOURCE}"
         "${BF_ASM_OBJ}"
     )
 
-    target_include_directories(${TARGET} PRIVATE
-        "${CMAKE_SOURCE_DIR}/src"
-        "${CMAKE_SOURCE_DIR}/src/vm"
-        "${CMAKE_SOURCE_DIR}/src/runtime"
+    target_include_directories(${TARGET}
+        PUBLIC
+            "${CMAKE_BINARY_DIR}/gen"
+        PRIVATE
+            "${CMAKE_SOURCE_DIR}/src"
+            "${CMAKE_SOURCE_DIR}/src/vm"
+            "${CMAKE_SOURCE_DIR}/src/runtime"
     )
 
     target_compile_definitions(${TARGET} PRIVATE BFDLL_EXPORTS)
@@ -53,7 +61,6 @@ function(add_bfdll TARGET)
         "/SUBSYSTEM:WINDOWS"
         "/MERGE:bf_text=.text"
         "/INCLUDE:BF_Prog_Hello"
-        "/INCLUDE:BF_Prog_HelloWorld"
         "/INCLUDE:BF_Prog_Add"
     )
 endfunction()

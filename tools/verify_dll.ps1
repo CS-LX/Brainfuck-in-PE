@@ -93,12 +93,21 @@ if (($pe.Characteristics -band 0x2000) -eq 0) {
 Write-Host "[OK] PE headers indicate DLL"
 
 $exportNames = Get-PeExportNames $bytes $sections
-foreach ($symbol in @("BF_Ping", "BF_Hello", "BF_Add", "BF_HelloWorld", "BF_GetLastOutput")) {
+$requiredExports = @(
+    "BF_Ping",
+    "BF_Hello",
+    "BF_Add",
+    "BF_AutoMessage",
+    "BF_HelloWorld",
+    "BF_GetLastOutput",
+    "BF_SetOutputCallback"
+)
+foreach ($symbol in $requiredExports) {
     if ($exportNames -notcontains $symbol) {
         throw "Missing export: $symbol"
     }
 }
-Write-Host "[OK] Exports BF_Ping, BF_Hello, BF_Add, BF_HelloWorld, BF_GetLastOutput"
+Write-Host "[OK] Required exports present"
 
 $text = $sections | Where-Object { $_.Name -eq ".text" } | Select-Object -First 1
 $rdata = $sections | Where-Object { $_.Name -eq ".rdata" } | Select-Object -First 1
@@ -116,6 +125,7 @@ Write-Host "[OK] No large .rsrc section"
 
 $coreFragments = @(
     @{ Name = "add.bf"; Pattern = ">[-<+>]" },
+    @{ Name = "auto_message.bf"; Pattern = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.++++++++++++++++++++++++++++++++++++++++++++++++++++." },
     @{ Name = "hello.bf"; Pattern = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++." },
     @{ Name = "hello_world.bf"; Pattern = "++++++++[>++++[>++>+++>+++>+<<<<-]" }
 )
@@ -136,8 +146,10 @@ foreach ($frag in $coreFragments) {
 if ($rdata) {
     $rdataBytes = $bytes[$rdata.RawPtr..($rdata.RawPtr + $rdata.RawSize - 1)]
     $rdataAscii = [Text.Encoding]::ASCII.GetString($rdataBytes)
-    if ($rdataAscii.Contains(">[-<+>]")) {
-        throw "add.bf fragment found in .rdata - disguised DLL"
+    foreach ($frag in $coreFragments) {
+        if ($rdataAscii.Contains($frag.Pattern)) {
+            throw ("{0} fragment found in .rdata - disguised DLL" -f $frag.Name)
+        }
     }
     Write-Host "[OK] BF program not in .rdata"
 }

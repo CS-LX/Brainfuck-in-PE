@@ -19,15 +19,27 @@
 
 ## 状态
 
-**Phase 0–2 已实现并通过验收**（x64 / MSVC）。导出函数：
+**Phase 0–2 已实现并通过验收；Phase 3 已完成多 `.bf` 自动导出与 I/O 回调 API**（x64 / MSVC）。x86 32-bit 构建暂缓。
 
 | 导出 | 说明 |
 |------|------|
 | `BF_Ping` | 原生桩，返回 42 |
 | `BF_Hello` | BF 输出 `Hi`（经 `BF_GetLastOutput` 读取） |
-| `BF_HelloWorld` | BF 输出并返回 `"Hello World!"` |
 | `BF_Add` | BFC-0：`BF_Add(a,b)` → `a+b`（8-bit wrap） |
+| `BF_AutoMessage` | 由 `auto_message.bf` 自动生成，返回 `"Auto export works!"` |
+| `BF_HelloWorld` | 由 `hello_world.bf` 自动生成，返回 `"Hello World!"` |
 | `BF_GetLastOutput` | 读取最近一次 BF `.` 输出缓冲 |
+| `BF_SetOutputCallback` | 注册宿主回调接收 BF `.` 输出字节 |
+
+## 自动导出
+
+在 `.bf` 文件中加入下面的注释指令，`tools/bf2asm.py` 会自动生成 `const char* __cdecl BF_<FileName>(void)` 导出函数：
+
+```bf
+; bfdll: export=output
+```
+
+例如 `src/programs/auto_message.bf` 会生成 `BF_AutoMessage()`。生成函数运行对应 BF 程序，并返回 trim 后的输出缓冲。
 
 ## 构建
 
@@ -49,7 +61,7 @@ powershell -ExecutionPolicy Bypass -File ..\..\..\tools\verify_dll.ps1 `
   -DllPath (Resolve-Path bfdll.dll)
 ```
 
-记事本打开 `bfdll.dll`，Ctrl+F 搜索 `[>++++[>++` 或 `>[-<+>]`，应能在 `.text` 区命中 BF 明文。
+记事本打开 `bfdll.dll`，Ctrl+F 搜索 `[>++++[>++`、`>[-<+>]` 或 `+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.`，应能在 `.text` 区命中 BF 明文。
 
 ## 文档
 
