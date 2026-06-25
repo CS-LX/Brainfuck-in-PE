@@ -1,0 +1,5 @@
+LIBRARY bfdll
+EXPORTS
+    BF_Ping
+    BF_Hello
+    BF_Add
