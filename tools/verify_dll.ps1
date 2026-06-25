@@ -93,12 +93,12 @@ if (($pe.Characteristics -band 0x2000) -eq 0) {
 Write-Host "[OK] PE headers indicate DLL"
 
 $exportNames = Get-PeExportNames $bytes $sections
-foreach ($symbol in @("BF_Ping", "BF_Hello", "BF_Add")) {
+foreach ($symbol in @("BF_Ping", "BF_Hello", "BF_Add", "BF_HelloWorld", "BF_GetLastOutput")) {
     if ($exportNames -notcontains $symbol) {
         throw "Missing export: $symbol"
     }
 }
-Write-Host "[OK] Exports BF_Ping, BF_Hello, BF_Add"
+Write-Host "[OK] Exports BF_Ping, BF_Hello, BF_Add, BF_HelloWorld, BF_GetLastOutput"
 
 $text = $sections | Where-Object { $_.Name -eq ".text" } | Select-Object -First 1
 $rdata = $sections | Where-Object { $_.Name -eq ".rdata" } | Select-Object -First 1
@@ -115,17 +115,17 @@ if ($rsrc -and $rsrc.RawSize -gt 512) {
 Write-Host "[OK] No large .rsrc section"
 
 $coreFragments = @(
-    @{ Name = "add.bf"; Pattern = ">\[-<\+>\]" },
-    @{ Name = "hello.bf"; Pattern = "\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+" }
+    @{ Name = "add.bf"; Pattern = ">[-<+>]" },
+    @{ Name = "hello.bf"; Pattern = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++." },
+    @{ Name = "hello_world.bf"; Pattern = "++++++++[>++++[>++>+++>+++>+<<<<-]" }
 )
 
 foreach ($frag in $coreFragments) {
-    if ($ascii -notmatch $frag.Pattern) {
+    $offset = $ascii.IndexOf($frag.Pattern)
+    if ($offset -lt 0) {
         throw ("Notepad test failed: {0} fragment not found in DLL" -f $frag.Name)
     }
 
-    $match = [regex]::Match($ascii, $frag.Pattern)
-    $offset = $match.Index
     $inText = ($offset -ge $text.RawPtr) -and ($offset -lt ($text.RawPtr + $text.RawSize))
     if (-not $inText) {
         throw ("Fragment {0} at offset 0x{1:X} is outside .text" -f $frag.Name, $offset)
@@ -136,7 +136,7 @@ foreach ($frag in $coreFragments) {
 if ($rdata) {
     $rdataBytes = $bytes[$rdata.RawPtr..($rdata.RawPtr + $rdata.RawSize - 1)]
     $rdataAscii = [Text.Encoding]::ASCII.GetString($rdataBytes)
-    if ($rdataAscii -match ">\[-<\+>\]") {
+    if ($rdataAscii.Contains(">[-<+>]")) {
         throw "add.bf fragment found in .rdata - disguised DLL"
     }
     Write-Host "[OK] BF program not in .rdata"

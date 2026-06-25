@@ -18,3 +18,10 @@ add_executable(test_host host/test_host.c)
 set_target_properties(test_host PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
+
+add_executable(test_host_static host/test_host_static.c)
+target_include_directories(test_host_static PRIVATE "${CMAKE_SOURCE_DIR}/host")
+target_link_libraries(test_host_static PRIVATE bfdll)
+set_target_properties(test_host_static PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)

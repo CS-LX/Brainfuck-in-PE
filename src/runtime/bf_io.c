@@ -55,3 +55,13 @@ const char* bf_io_output_buffer(void)
 {
     return g_output_buffer;
 }
+
+const char* bf_io_output_trimmed(void)
+{
+    size_t len = g_output_length;
+    while (len > 0 && (g_output_buffer[len - 1] == '\n' || g_output_buffer[len - 1] == '\r')) {
+        --len;
+    }
+    g_output_buffer[len] = '\0';
+    return g_output_buffer;
+}

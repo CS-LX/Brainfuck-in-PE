@@ -53,6 +53,7 @@ function(add_bfdll TARGET)
         "/SUBSYSTEM:WINDOWS"
         "/MERGE:bf_text=.text"
         "/INCLUDE:BF_Prog_Hello"
+        "/INCLUDE:BF_Prog_HelloWorld"
         "/INCLUDE:BF_Prog_Add"
     )
 endfunction()

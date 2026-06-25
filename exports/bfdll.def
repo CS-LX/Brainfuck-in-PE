@@ -3,3 +3,5 @@ EXPORTS
     BF_Ping
     BF_Hello
     BF_Add
+    BF_HelloWorld
+    BF_GetLastOutput

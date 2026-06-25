@@ -17,6 +17,40 @@
 3. **禁止伪装**：不得把 BF 藏在 `.rsrc`、`.rdata` 等资源/数据节  
 4. BF 明文必须位于 **`.text`（放指令的地方）**；用记事本打开 DLL 可搜索到 `+-<>[],.`
 
+## 状态
+
+**Phase 0–2 已实现并通过验收**（x64 / MSVC）。导出函数：
+
+| 导出 | 说明 |
+|------|------|
+| `BF_Ping` | 原生桩，返回 42 |
+| `BF_Hello` | BF 输出 `Hi`（经 `BF_GetLastOutput` 读取） |
+| `BF_HelloWorld` | BF 输出并返回 `"Hello World!"` |
+| `BF_Add` | BFC-0：`BF_Add(a,b)` → `a+b`（8-bit wrap） |
+| `BF_GetLastOutput` | 读取最近一次 BF `.` 输出缓冲 |
+
+## 构建
+
+```powershell
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+```
+
+产物位于 `build/bin/Release/`：`bfdll.dll`、`bfdll.lib`、`test_host.exe`、`test_host_static.exe`。
+
+## 测试
+
+```powershell
+cd build/bin/Release
+.\test_host.exe           # LoadLibrary 动态加载
+.\test_host_static.exe    # __declspec(dllimport) + bfdll.lib 静态导入
+
+powershell -ExecutionPolicy Bypass -File ..\..\..\tools\verify_dll.ps1 `
+  -DllPath (Resolve-Path bfdll.dll)
+```
+
+记事本打开 `bfdll.dll`，Ctrl+F 搜索 `[>++++[>++` 或 `>[-<+>]`，应能在 `.text` 区命中 BF 明文。
+
 ## 文档
 
 | 文档 | 说明 |
@@ -24,10 +58,6 @@
 | [docs/可行性报告.md](docs/可行性报告.md) | 可行性结论、实验目标、排除方案 |
 | [docs/实现方案.md](docs/实现方案.md) | PE 布局、模块设计、工具链、验收标准 |
 | [docs/archive/](docs/archive/) | 已 supersede 的早期笔记 |
-
-## 状态
-
-当前仓库为**设计与可行性阶段**；源码与构建系统尚未实现（见实现方案 §9 实施阶段）。
 
 ## 许可证
 

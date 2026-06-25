@@ -10,5 +10,6 @@ void bf_io_write(bf_vm_t* vm, uint8_t byte);
 uint8_t bf_io_read(bf_vm_t* vm);
 void bf_io_flush(void);
 const char* bf_io_output_buffer(void);
+const char* bf_io_output_trimmed(void);
 
 #endif
