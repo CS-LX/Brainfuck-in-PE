@@ -1,0 +1,16 @@
+e:\CS Projects\BFDll\examples\BfdllCSharp\bin\Release\net8.0\win-x64\bfdll.dll
+e:\CS Projects\BFDll\examples\BfdllCSharp\bin\Release\net8.0\win-x64\BfdllCSharp.exe
+e:\CS Projects\BFDll\examples\BfdllCSharp\bin\Release\net8.0\win-x64\BfdllCSharp.deps.json
+e:\CS Projects\BFDll\examples\BfdllCSharp\bin\Release\net8.0\win-x64\BfdllCSharp.runtimeconfig.json
+e:\CS Projects\BFDll\examples\BfdllCSharp\bin\Release\net8.0\win-x64\BfdllCSharp.dll
+e:\CS Projects\BFDll\examples\BfdllCSharp\bin\Release\net8.0\win-x64\BfdllCSharp.pdb
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.GeneratedMSBuildEditorConfig.editorconfig
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.AssemblyInfoInputs.cache
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.AssemblyInfo.cs
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.csproj.CoreCompileInputs.cache
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.sourcelink.json
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.dll
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\refint\BfdllCSharp.dll
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.pdb
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\BfdllCSharp.genruntimeconfig.cache
+e:\CS Projects\BFDll\examples\BfdllCSharp\obj\Release\net8.0\win-x64\ref\BfdllCSharp.dll

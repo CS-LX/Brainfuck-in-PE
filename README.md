@@ -63,6 +63,15 @@ powershell -ExecutionPolicy Bypass -File ..\..\..\tools\verify_dll.ps1 `
 
 记事本打开 `bfdll.dll`，Ctrl+F 搜索 `[>++++[>++`、`>[-<+>]` 或 `+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.`，应能在 `.text` 区命中 BF 明文。
 
+## C# 验收宿主
+
+见 [examples/BfdllCSharp/](examples/BfdllCSharp/)：P/Invoke 调用 `bfdll.dll`，测试项与 `test_host.exe` 一致。
+
+```powershell
+cd examples/BfdllCSharp
+dotnet run -c Release
+```
+
 ## 文档
 
 | 文档 | 说明 |
